@@ -18,7 +18,7 @@ STRICT_AI_PROMPT = """
 """
 
 
-def format_console_message(posts: list[dict]) -> str:
+def format_console_message(posts: list[dict], tip: dict | None = None) -> str:
     lines = [
         "🏠 진주 청년/무주택 주거 알림",
         "",
@@ -39,19 +39,26 @@ def format_console_message(posts: list[dict]) -> str:
             item_lines.append(f"- 변경: {post.get('change_reason')}")
         item_lines.extend([f"- 링크: {post.get('url') or '확인 필요'}", ""])
         lines.extend(item_lines)
+    if tip:
+        lines.extend(format_tip_lines(tip))
     lines.extend(default_tips())
     return "\n".join(lines)
 
 
-def format_kakao_feed(posts: list[dict], link_url: str | None = None) -> dict:
+def format_kakao_feed(posts: list[dict], link_url: str | None = None, tip: dict | None = None) -> dict:
     first_url = link_url or posts[0].get("url") or "https://www.jinju.go.kr/"
     items = []
     for post in posts[:5]:
         item_name = _truncate(post.get("title") or "제목 확인 필요", 14)
         item_op = _truncate(post.get("source") or "출처 확인", 12)
         items.append({"item": item_name, "item_op": item_op})
+    if tip:
+        items.append({"item": _truncate(tip["title"], 14), "item_op": "오늘의 팁"})
 
-    description = f"새 공고 {len(posts)}건 발견. 상세 내용은 원문 링크와 콘솔 로그를 확인하세요."
+    description = f"새 공고 {len(posts)}건 발견."
+    if tip:
+        description += f" 오늘의 팁: {_truncate(tip['title'], 24)}"
+    description += " 상세 내용은 원문 링크와 콘솔 로그를 확인하세요."
     return {
         "object_type": "feed",
         "content": {
@@ -72,6 +79,55 @@ def format_kakao_feed(posts: list[dict], link_url: str | None = None) -> dict:
             }
         ],
     }
+
+
+def format_tip_console_message(tip: dict) -> str:
+    return "\n".join(
+        [
+            "🏠 오늘의 청년/무주택 주거 팁",
+            "",
+            *format_tip_lines(tip),
+        ]
+    )
+
+
+def format_tip_kakao_feed(tip: dict, link_url: str | None = None) -> dict:
+    first_url = link_url or "https://github.com/djmonnar/housing-alert-jinju"
+    checks = ", ".join(tip.get("checks", []))
+    return {
+        "object_type": "feed",
+        "content": {
+            "title": "오늘의 청년/무주택 주거 팁",
+            "description": _truncate(f"{tip['title']} - {tip['body']}", 90),
+            "link": {"web_url": first_url, "mobile_web_url": first_url},
+        },
+        "item_content": {
+            "profile_text": "housing-alert-jinju",
+            "items": [
+                {"item": "주제", "item_op": _truncate(tip["title"], 12)},
+                {"item": "체크", "item_op": _truncate(checks or "확인 필요", 12)},
+            ],
+            "sum": "확인",
+            "sum_op": "1개",
+        },
+        "buttons": [
+            {
+                "title": "참고 보기",
+                "link": {"web_url": first_url, "mobile_web_url": first_url},
+            }
+        ],
+    }
+
+
+def format_tip_lines(tip: dict) -> list[str]:
+    checks = ", ".join(tip.get("checks", [])) or "확인 필요"
+    return [
+        "오늘의 주거 팁:",
+        f"- 주제: {tip['title']}",
+        f"- 내용: {tip['body']}",
+        f"- 체크: {checks}",
+        "",
+    ]
 
 
 def maybe_ai_summarize_posts(posts: list[dict]) -> list[dict]:

@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 SEEN_POSTS_PATH = DATA_DIR / "seen_posts.json"
+TIP_STATE_PATH = DATA_DIR / "tip_state.json"
 
 load_dotenv(BASE_DIR / ".env")
 
@@ -29,6 +30,7 @@ class Settings:
     openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
     openai_model: str = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
     dry_run: bool = _truthy(os.getenv("DRY_RUN"), default=False)
+    send_daily_tip: bool = _truthy(os.getenv("SEND_DAILY_TIP"), default=True)
     log_level: str = os.getenv("LOG_LEVEL", "INFO").upper()
     request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "15"))
     max_alert_posts: int = int(os.getenv("MAX_ALERT_POSTS", "5"))

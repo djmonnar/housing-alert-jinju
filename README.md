@@ -22,7 +22,7 @@
 7. 새 공고가 있으면 최대 5건까지 카카오톡 메시지를 보냅니다.
 8. 발송 성공 후에만 `seen_posts.json`에 저장합니다.
 
-새 공고가 없으면 카카오톡을 보내지 않고 로그만 남깁니다.
+새 공고가 없더라도 `SEND_DAILY_TIP=true`이면 행복주택, 청년주택, 임대주택 관련 오늘의 주거 팁을 하루 1회 보냅니다. 이 기능을 끄려면 `.env` 또는 GitHub Actions 변수에 `SEND_DAILY_TIP=false`를 설정하세요.
 
 ## 설치
 
@@ -57,6 +57,7 @@ OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4.1-mini
 
 DRY_RUN=true
+SEND_DAILY_TIP=true
 LOG_LEVEL=INFO
 ```
 
@@ -97,6 +98,7 @@ GitHub 저장소에서 `Settings > Secrets and variables > Actions`로 이동해
 변수로 아래 값을 둘 수 있습니다.
 
 - `DRY_RUN`: 테스트 중이면 `true`, 실제 운영이면 `false`
+- `SEND_DAILY_TIP`: 새 공고가 없어도 하루 1회 주거 팁을 받으려면 `true`
 - `OPENAI_MODEL`: 기본값은 `gpt-4.1-mini`
 
 API 키, 토큰, 개인정보는 코드에 넣지 않습니다.
@@ -126,6 +128,7 @@ API 키, 토큰, 개인정보는 코드에 넣지 않습니다.
 - UTC 기준 `0 0 * * *`
 - `workflow_dispatch`로 수동 실행 가능
 - 실행 후 새 공고가 발송되면 `data/seen_posts.json`을 커밋해 중복 발송을 막습니다.
+- 오늘의 주거 팁 발송 여부는 `data/tip_state.json`에 저장합니다.
 
 ## 로그 확인
 

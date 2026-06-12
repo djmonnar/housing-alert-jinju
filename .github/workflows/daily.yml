@@ -34,18 +34,19 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1-mini' }}
           DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+          SEND_DAILY_TIP: ${{ vars.SEND_DAILY_TIP || 'true' }}
           LOG_LEVEL: INFO
         run: python main.py
 
       - name: Persist seen posts
         if: success()
         run: |
-          if [ -n "$(git status --porcelain data/seen_posts.json)" ]; then
+          if [ -n "$(git status --porcelain data/seen_posts.json data/tip_state.json)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/seen_posts.json
+            git add data/seen_posts.json data/tip_state.json
             git commit -m "Update seen housing posts"
             git push
           else
-            echo "No seen_posts.json changes"
+            echo "No state file changes"
           fi
