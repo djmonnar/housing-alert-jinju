@@ -73,7 +73,7 @@ def main() -> int:
         return 0
 
     if new_posts:
-        link_url = settings.kakao_web_link_url or new_posts[0].get("url")
+        link_url = new_posts[0].get("url") or settings.kakao_web_link_url
         template = format_kakao_feed(new_posts, link_url=link_url, tip=tip)
     else:
         template = format_tip_kakao_feed(tip, link_url=settings.kakao_web_link_url)
