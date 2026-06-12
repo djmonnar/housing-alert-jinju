@@ -15,6 +15,7 @@ SEND_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
 class KakaoNotifier:
     def __init__(self) -> None:
         self.rest_api_key = settings.kakao_rest_api_key
+        self.client_secret = settings.kakao_client_secret
         self.refresh_token = settings.kakao_refresh_token
         self.redirect_uri = settings.kakao_redirect_uri
         self.access_token = settings.kakao_access_token
@@ -54,6 +55,8 @@ class KakaoNotifier:
             "client_id": self.rest_api_key,
             "refresh_token": self.refresh_token,
         }
+        if self.client_secret:
+            data["client_secret"] = self.client_secret
         if self.redirect_uri:
             data["redirect_uri"] = self.redirect_uri
 

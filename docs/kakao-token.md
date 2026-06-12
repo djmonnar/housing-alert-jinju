@@ -7,6 +7,7 @@
 1. [Kakao Developers](https://developers.kakao.com/)에 로그인합니다.
 2. `내 애플리케이션`에서 앱을 생성합니다.
 3. 앱의 `REST API 키`를 복사해 `KAKAO_REST_API_KEY`로 사용합니다.
+4. REST API 키에 클라이언트 시크릿을 활성화했다면 `Client Secret`도 복사해 `KAKAO_CLIENT_SECRET`으로 사용합니다.
 
 ## 2. 플랫폼과 Redirect URI 등록
 
@@ -63,6 +64,27 @@ Invoke-RestMethod `
   }
 ```
 
+클라이언트 시크릿을 활성화한 REST API 키라면 아래처럼 `client_secret`도 포함합니다.
+
+```powershell
+$REST_API_KEY="본인_REST_API_KEY"
+$CLIENT_SECRET="본인_CLIENT_SECRET"
+$REDIRECT_URI="http://localhost:8000/oauth"
+$CODE="방금_받은_code"
+
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "https://kauth.kakao.com/oauth/token" `
+  -ContentType "application/x-www-form-urlencoded;charset=utf-8" `
+  -Body @{
+    grant_type="authorization_code"
+    client_id=$REST_API_KEY
+    client_secret=$CLIENT_SECRET
+    redirect_uri=$REDIRECT_URI
+    code=$CODE
+  }
+```
+
 응답의 `refresh_token`을 GitHub Secret `KAKAO_REFRESH_TOKEN`에 저장합니다. `access_token`은 짧게 만료되므로 저장하지 않아도 됩니다. 이 프로젝트는 매 실행 때 `refresh_token`으로 새 `access_token`을 갱신합니다.
 
 ## 6. Product Link 웹 도메인 주의
@@ -83,6 +105,7 @@ https://young.jinju.go.kr
 ## 7. 토큰 갱신 실패 시 확인
 
 - `KAKAO_REST_API_KEY`가 REST API 키인지 확인합니다.
+- 클라이언트 시크릿을 활성화했다면 `KAKAO_CLIENT_SECRET`도 설정했는지 확인합니다.
 - `KAKAO_REFRESH_TOKEN`이 전체 문자열로 저장됐는지 확인합니다.
 - `KAKAO_REDIRECT_URI`가 최초 발급 때 사용한 URI와 같은지 확인합니다.
 - 앱 동의항목에 `talk_message`가 설정되어 있는지 확인합니다.

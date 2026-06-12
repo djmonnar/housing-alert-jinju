@@ -21,6 +21,7 @@ def _truthy(value: str | None, default: bool = False) -> bool:
 @dataclass(frozen=True)
 class Settings:
     kakao_rest_api_key: str | None = os.getenv("KAKAO_REST_API_KEY")
+    kakao_client_secret: str | None = os.getenv("KAKAO_CLIENT_SECRET")
     kakao_refresh_token: str | None = os.getenv("KAKAO_REFRESH_TOKEN")
     kakao_redirect_uri: str | None = os.getenv("KAKAO_REDIRECT_URI")
     kakao_access_token: str | None = os.getenv("KAKAO_ACCESS_TOKEN")

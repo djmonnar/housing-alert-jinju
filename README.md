@@ -48,6 +48,7 @@ Copy-Item .env.example .env
 
 ```dotenv
 KAKAO_REST_API_KEY=
+KAKAO_CLIENT_SECRET=
 KAKAO_REFRESH_TOKEN=
 KAKAO_REDIRECT_URI=
 KAKAO_WEB_LINK_URL=
@@ -87,6 +88,7 @@ DRY_RUN=false python main.py
 GitHub 저장소에서 `Settings > Secrets and variables > Actions`로 이동해 아래 Secret을 추가합니다.
 
 - `KAKAO_REST_API_KEY`
+- `KAKAO_CLIENT_SECRET` 클라이언트 시크릿을 활성화한 경우
 - `KAKAO_REFRESH_TOKEN`
 - `KAKAO_REDIRECT_URI`
 - `KAKAO_WEB_LINK_URL` 선택
@@ -107,11 +109,12 @@ API 키, 토큰, 개인정보는 코드에 넣지 않습니다.
 
 1. Kakao Developers에서 앱 생성
 2. REST API 키 확인
-3. 카카오 로그인 활성화
-4. Redirect URI 등록
-5. 동의항목에서 `talk_message` 설정
-6. 인증 코드로 `refresh_token` 발급
-7. GitHub Secret에 저장
+3. 클라이언트 시크릿을 활성화했다면 Client Secret 확인
+4. 카카오 로그인 활성화
+5. Redirect URI 등록
+6. 동의항목에서 `talk_message` 설정
+7. 인증 코드로 `refresh_token` 발급
+8. GitHub Secret에 저장
 
 카카오 기본 템플릿의 링크 버튼은 Product Link 웹 도메인 등록 조건을 탑니다. 원문 버튼을 바로 열려면 LH, 마이홈, 진주시청, 진주시 청년온라인플랫폼 도메인을 앱 설정에 등록하세요. 어렵다면 `KAKAO_WEB_LINK_URL`에 본인이 등록 가능한 고정 URL을 넣으세요.
 
