@@ -140,6 +140,53 @@ def format_post_text_template(post: dict, index: int, total: int, link_url: str 
     }
 
 
+def format_business_console_message(posts: list[dict]) -> str:
+    lines = [
+        "💼 경남 소상공인/창업/마케팅 지원 알림",
+        "",
+        f"새 사업지원 공고 {len(posts)}건 발견",
+        "",
+    ]
+    for idx, post in enumerate(posts, start=1):
+        lines.extend(
+            [
+                f"{idx}) {post.get('title', '제목 확인 필요')}",
+                f"- 출처: {post.get('source', '확인 필요')}",
+                f"- 게시일: {post.get('published_at') or '확인 필요'}",
+                f"- 신청/접수: {post.get('application_period') or '확인 필요'}",
+                f"- 분야: {post.get('business_category') or '확인 필요'}",
+                f"- 대상: {post.get('target') or '확인 필요'}",
+                f"- 체크: {post.get('checkpoints') or '원문 확인 필요'}",
+                f"- 링크: {post.get('url') or '확인 필요'}",
+                "",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def format_business_text_template(post: dict, index: int, total: int, link_url: str | None = None) -> dict:
+    fallback_url = link_url or settings.kakao_web_link_url or "https://github.com/djmonnar/housing-alert-jinju"
+    source = post.get("source") or "출처 확인"
+    url = post.get("url") or "원문 확인 필요"
+    category = post.get("business_category") or "분야 확인"
+    title = _truncate(post.get("title") or "제목 확인 필요", 48)
+    text = "\n".join(
+        [
+            f"💼 경남 사업지원 {index}/{total}",
+            title,
+            f"분야: {_truncate(category, 18)}",
+            f"출처: {_truncate(source, 16)}",
+            f"원문: {url}",
+        ]
+    )
+    return {
+        "object_type": "text",
+        "text": _truncate(text, 195),
+        "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
+        "button_title": "참고 보기",
+    }
+
+
 def format_tip_text_template(tip: dict, link_url: str | None = None) -> dict:
     fallback_url = link_url or settings.kakao_web_link_url or "https://github.com/djmonnar/housing-alert-jinju"
     checks = ", ".join(tip.get("checks", []))

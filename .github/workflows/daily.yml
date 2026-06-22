@@ -41,10 +41,10 @@ jobs:
       - name: Persist seen posts
         if: success()
         run: |
-          if [ -n "$(git status --porcelain data/seen_posts.json data/tip_state.json)" ]; then
+          if [ -n "$(git status --porcelain data/seen_posts.json data/seen_business_posts.json data/tip_state.json)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/seen_posts.json data/tip_state.json
+            git add data/seen_posts.json data/seen_business_posts.json data/tip_state.json
             git commit -m "Update seen housing posts"
             git push
           else

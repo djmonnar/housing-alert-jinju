@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 SEEN_POSTS_PATH = DATA_DIR / "seen_posts.json"
+SEEN_BUSINESS_POSTS_PATH = DATA_DIR / "seen_business_posts.json"
 TIP_STATE_PATH = DATA_DIR / "tip_state.json"
 
 load_dotenv(BASE_DIR / ".env")
@@ -34,6 +35,7 @@ class Settings:
     log_level: str = os.getenv("LOG_LEVEL", "INFO").upper()
     request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "15"))
     max_alert_posts: int = int(os.getenv("MAX_ALERT_POSTS", "5"))
+    max_business_alert_posts: int = int(os.getenv("MAX_BUSINESS_ALERT_POSTS", "3"))
 
 
 settings = Settings()
