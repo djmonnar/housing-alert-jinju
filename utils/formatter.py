@@ -119,6 +119,45 @@ def format_tip_kakao_feed(tip: dict, link_url: str | None = None) -> dict:
     }
 
 
+def format_post_text_template(post: dict, index: int, total: int, link_url: str | None = None) -> dict:
+    fallback_url = link_url or settings.kakao_web_link_url or "https://github.com/djmonnar/housing-alert-jinju"
+    source = post.get("source") or "출처 확인"
+    url = post.get("url") or "원문 확인 필요"
+    title = _truncate(post.get("title") or "제목 확인 필요", 52)
+    text = "\n".join(
+        [
+            f"🏠 진주 주거 공고 {index}/{total}",
+            title,
+            f"출처: {_truncate(source, 16)}",
+            f"원문: {url}",
+        ]
+    )
+    return {
+        "object_type": "text",
+        "text": _truncate(text, 195),
+        "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
+        "button_title": "참고 보기",
+    }
+
+
+def format_tip_text_template(tip: dict, link_url: str | None = None) -> dict:
+    fallback_url = link_url or settings.kakao_web_link_url or "https://github.com/djmonnar/housing-alert-jinju"
+    checks = ", ".join(tip.get("checks", []))
+    text = "\n".join(
+        [
+            "💡 오늘의 주거 팁",
+            _truncate(tip["title"], 44),
+            f"체크: {_truncate(checks or '확인 필요', 80)}",
+        ]
+    )
+    return {
+        "object_type": "text",
+        "text": _truncate(text, 195),
+        "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
+        "button_title": "참고 보기",
+    }
+
+
 def format_tip_lines(tip: dict) -> list[str]:
     checks = ", ".join(tip.get("checks", [])) or "확인 필요"
     return [

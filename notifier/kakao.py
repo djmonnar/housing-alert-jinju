@@ -21,11 +21,29 @@ class KakaoNotifier:
         self.access_token = settings.kakao_access_token
 
     def send_feed(self, template_object: dict) -> bool:
+        return self.send_template(template_object)
+
+    def send_templates(self, template_objects: list[dict]) -> bool:
         access_token = self.access_token or self.refresh_access_token()
         if not access_token:
             logger.error("카카오 access_token을 준비하지 못했습니다.")
             return False
 
+        for template_object in template_objects:
+            if not self._send_template_with_token(access_token, template_object):
+                return False
+        logger.info("카카오톡 알림 %s건 발송 성공", len(template_objects))
+        return True
+
+    def send_template(self, template_object: dict) -> bool:
+        access_token = self.access_token or self.refresh_access_token()
+        if not access_token:
+            logger.error("카카오 access_token을 준비하지 못했습니다.")
+            return False
+
+        return self._send_template_with_token(access_token, template_object)
+
+    def _send_template_with_token(self, access_token: str, template_object: dict) -> bool:
         try:
             response = requests.post(
                 SEND_URL,

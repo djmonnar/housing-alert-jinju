@@ -7,9 +7,10 @@ from scrapers import jinju_city, jinju_youth, lh, myhome
 from utils.filters import dedupe_posts, enrich_post, is_candidate
 from utils.formatter import (
     format_console_message,
-    format_kakao_feed,
+    format_post_text_template,
     format_tip_console_message,
     format_tip_kakao_feed,
+    format_tip_text_template,
     maybe_ai_summarize_posts,
 )
 from utils.storage import filter_new_posts, load_seen_posts, mark_posts_seen
@@ -73,12 +74,16 @@ def main() -> int:
         return 0
 
     if new_posts:
-        link_url = new_posts[0].get("url") or settings.kakao_web_link_url
-        template = format_kakao_feed(new_posts, link_url=link_url, tip=tip)
+        templates = [
+            format_post_text_template(post, idx, len(new_posts), link_url=settings.kakao_web_link_url)
+            for idx, post in enumerate(new_posts, start=1)
+        ]
+        if tip:
+            templates.append(format_tip_text_template(tip, link_url=settings.kakao_web_link_url))
+        sent = KakaoNotifier().send_templates(templates)
     else:
         template = format_tip_kakao_feed(tip, link_url=settings.kakao_web_link_url)
-
-    sent = KakaoNotifier().send_feed(template)
+        sent = KakaoNotifier().send_feed(template)
     if sent:
         if new_posts:
             mark_posts_seen(SEEN_POSTS_PATH, seen_data, new_posts)

@@ -29,6 +29,8 @@ CORE_KEYWORDS = [
 ]
 
 REGION_KEYWORDS = ["진주", "진주시", "경남", "경상남도"]
+DIRECT_JINJU_KEYWORDS = ["진주", "진주시"]
+JINJU_OFFICIAL_SOURCES = {"진주시청", "진주시 청년온라인플랫폼"}
 
 TOPIC_KEYWORDS = [
     "행복주택",
@@ -194,8 +196,11 @@ def is_candidate(post: dict, today: date | None = None) -> bool:
         return False
     if not any(keyword in text for keyword in TOPIC_KEYWORDS):
         return False
-    region_related = any(keyword in text for keyword in REGION_KEYWORDS)
-    if not region_related and post.get("source") not in {"진주시청", "진주시 청년온라인플랫폼"}:
+    if post.get("source") in JINJU_OFFICIAL_SOURCES:
+        region_related = True
+    else:
+        region_related = any(keyword in text for keyword in DIRECT_JINJU_KEYWORDS)
+    if not region_related:
         return False
     period_end = _period_end_date(post.get("application_period"))
     if period_end and period_end < today:
