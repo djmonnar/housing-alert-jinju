@@ -136,7 +136,6 @@ def format_post_text_template(post: dict, index: int, total: int, link_url: str 
         "object_type": "text",
         "text": _truncate(text, 195),
         "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
-        "button_title": "참고 보기",
     }
 
 
@@ -183,7 +182,6 @@ def format_business_text_template(post: dict, index: int, total: int, link_url: 
         "object_type": "text",
         "text": _truncate(text, 195),
         "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
-        "button_title": "참고 보기",
     }
 
 
@@ -201,7 +199,6 @@ def format_tip_text_template(tip: dict, link_url: str | None = None) -> dict:
         "object_type": "text",
         "text": _truncate(text, 195),
         "link": {"web_url": fallback_url, "mobile_web_url": fallback_url},
-        "button_title": "참고 보기",
     }
 
 

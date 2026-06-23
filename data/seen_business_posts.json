@@ -1,3 +1,25 @@
 {
-  "posts": {}
+  "posts": {
+    "97d783fc8ca5fe9dbea44bf5b617101ea750df9cfdfac91c8e800e03584c1206": {
+      "title": "「2026 베트남 AI 및 첨단테크 전시회 참가 지원사업」",
+      "source": "경남투자경제진흥원",
+      "url": "https://giba.or.kr/fe/bizinfo/bizannounce/NR_list.do?bbsCd=11",
+      "fingerprint": "28d2470d7fd36fd2c47b34fceeb1c36f78cfcb1383d44275213ba7b28d51b3ff",
+      "sent_at": "2026-06-23T03:01:31.962702+00:00"
+    },
+    "8d5d6e555828d6dc7534fc56e8a4cf065bdd74de391d371650ba985b00e26306": {
+      "title": "(공고/기업 제2026 - 27호)「2026년 희망리턴패키지 재도전 교육」 교육생 모집",
+      "source": "경남신용보증재단 소상공인종합지원",
+      "url": "https://dream.gnsinbo.or.kr/bbs/board.php?bo_table=04_01&wr_id=169",
+      "fingerprint": "12208b47f33a823dfc4dc2e0fe191e1fbc2e56a753291f7b7a0cc4dd791702bf",
+      "sent_at": "2026-06-23T03:01:31.962702+00:00"
+    },
+    "a11ed81d6bac8156686b75ef1334b6e29b6c45ce46e4c362678dfb0d130dc387": {
+      "title": "(공고/기업 제2026-25호)「2026년 소상공인 도약 지원 사업」 모집공고",
+      "source": "경남신용보증재단 소상공인종합지원",
+      "url": "https://dream.gnsinbo.or.kr/bbs/board.php?bo_table=04_01&wr_id=167",
+      "fingerprint": "b529647440927d321c21c36d6944fda9ad2cb956e226ee40f96ac52096c9892c",
+      "sent_at": "2026-06-23T03:01:31.962702+00:00"
+    }
+  }
 }

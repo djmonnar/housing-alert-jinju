@@ -12,7 +12,6 @@ from utils.formatter import (
     format_console_message,
     format_post_text_template,
     format_tip_console_message,
-    format_tip_kakao_feed,
     format_tip_text_template,
     maybe_ai_summarize_posts,
 )
@@ -133,7 +132,12 @@ def _safe_print(message: str) -> None:
     try:
         print(message)
     except UnicodeEncodeError:
-        print(message.replace("🏠", "[주거]"))
+        safe_message = (
+            message.replace("🏠", "[주거]")
+            .replace("💼", "[사업]")
+            .replace("💡", "[팁]")
+        )
+        print(safe_message.encode("cp949", errors="replace").decode("cp949"))
 
 
 if __name__ == "__main__":

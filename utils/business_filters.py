@@ -1,10 +1,12 @@
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 
 from utils.filters import (
     clean_text,
     extract_application_period,
     extract_first_date,
     normalize_url,
+    parse_date,
     stable_post_key,
 )
 
@@ -102,7 +104,14 @@ EXCLUDE_KEYWORDS = [
 ]
 
 
-def is_business_candidate(post: dict) -> bool:
+DATE_PATTERNS = [
+    re.compile(r"(20\d{2})[.\-/년]\s*(\d{1,2})[.\-/월]\s*(\d{1,2})"),
+    re.compile(r"(20\d{2})(\d{2})(\d{2})"),
+]
+
+
+def is_business_candidate(post: dict, today=None) -> bool:
+    today = today or datetime.now().date()
     text = _business_content_text(post)
     title = clean_text(post.get("title"))
     if not text or title in GENERIC_TITLES:
@@ -121,6 +130,14 @@ def is_business_candidate(post: dict) -> bool:
     if not any(keyword in text for keyword in BUSINESS_TOPIC_KEYWORDS):
         return False
     if infer_business_category(post) == "확인 필요":
+        return False
+    period_end = _period_end_date(post.get("application_period") or extract_application_period(text))
+    if period_end and period_end < today:
+        return False
+    published_at = parse_date(post.get("published_at") or extract_first_date(text))
+    if not period_end and not published_at:
+        return False
+    if not period_end and published_at and published_at < today - timedelta(days=30):
         return False
     if post.get("source") in BUSINESS_OFFICIAL_SOURCES:
         return True
@@ -223,3 +240,15 @@ def _business_content_text(post: dict) -> str:
         post.get("application_period"),
     ]
     return clean_text(" ".join(str(field) for field in fields if field))
+
+
+def _period_end_date(period: str | None):
+    if not period:
+        return None
+    matches = []
+    for pattern in DATE_PATTERNS:
+        for match in pattern.finditer(period):
+            parsed = parse_date(match.group(0))
+            if parsed:
+                matches.append(parsed)
+    return max(matches) if matches else None
