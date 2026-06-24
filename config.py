@@ -31,7 +31,7 @@ class Settings:
     openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
     openai_model: str = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
     dry_run: bool = _truthy(os.getenv("DRY_RUN"), default=False)
-    send_daily_tip: bool = _truthy(os.getenv("SEND_DAILY_TIP"), default=True)
+    send_daily_tip: bool = _truthy(os.getenv("SEND_DAILY_TIP"), default=False)
     log_level: str = os.getenv("LOG_LEVEL", "INFO").upper()
     request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "15"))
     max_alert_posts: int = int(os.getenv("MAX_ALERT_POSTS", "5"))

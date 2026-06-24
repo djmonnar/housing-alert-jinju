@@ -103,16 +103,20 @@ def main() -> int:
     templates = []
     if new_posts:
         templates.extend(
-            format_post_text_template(post, idx, len(new_posts), link_url=settings.kakao_web_link_url)
+            format_post_text_template(post, idx, len(new_posts), link_url=post.get("url"))
             for idx, post in enumerate(new_posts, start=1)
         )
     if new_business_posts:
         templates.extend(
-            format_business_text_template(post, idx, len(new_business_posts), link_url=settings.kakao_web_link_url)
+            format_business_text_template(post, idx, len(new_business_posts), link_url=post.get("url"))
             for idx, post in enumerate(new_business_posts, start=1)
         )
-    if tip:
+    if tip and (new_posts or new_business_posts):
         templates.append(format_tip_text_template(tip, link_url=settings.kakao_web_link_url))
+
+    if not templates:
+        logging.info("카카오 기본 템플릿 버튼을 피하기 위해 링크 없는 팁 단독 발송은 건너뜁니다.")
+        return 0
 
     sent = KakaoNotifier().send_templates(templates)
     if sent:
